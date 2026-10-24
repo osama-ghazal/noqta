@@ -1,22 +1,45 @@
-# Noqta app
+# Pix Studio
 
-A Noqta app: it runs on your servers and opens inside the Noqta store admin, like a Shopify
-embedded app. This starter is a working example — **AI product images**: it opens on a product
-(or a selection of products) and replaces their images. The "AI" here just draws a number on the
-image (`server/stamp.ts`); replace it with your own.
+AI product photos for Noqta stores: a clean background in any colour, or a realistic scene.
+
+## Run it
+
+**1. Install** (once)
 
 ```bash
-npm install
-nqs app dev        # your local app on your dev store → its admin → Apps → your app
-nqs app deploy     # when ready for real stores (Noqta reviews it)
+npm install -g @noqtaps/cli
+winget install Cloudflare.cloudflared      # macOS: brew install cloudflared
 ```
 
-Read **AGENTS.md** first (and give it to your AI assistant). Reference: `docs/api.md`,
-`docs/bridge.md`, `docs/shopify-differences.md`.
+**2. Set up the project**
 
-| Command | |
-|---|---|
-| `npm run dev` | server + frontend on http://localhost:3000 (what `nqs app dev` runs, behind its tunnel) |
-| `npm run build` | build `dist/` (frontend + server) |
-| `npm start` | run the build (production) |
-| `npm run typecheck` | type-check frontend and server |
+```bash
+git clone https://github.com/osama-ghazal/noqta.git pix-studio
+cd pix-studio
+npm install
+nqs app login --token nqd_YOUR_TOKEN
+cp .env.example .env
+```
+
+Fill in `.env` with the values Osama sends you:
+
+```ini
+NOQTA_CLIENT_ID=
+NOQTA_CLIENT_SECRET=
+GEMINI_API_KEY=
+ANTHROPIC_API_KEY=
+```
+
+**3. Start**
+
+```bash
+nqs app dev
+```
+
+**4. Open it** in admin.noqta.ps → any product → **التطبيقات** → **تحسين الصور**.
+
+## If something's wrong
+
+- **"Invalid or missing session token"**: your computer's clock is off. Turn on *Set time automatically* and sync.
+- **Port 3000 in use**: run `nqs app dev --port 3001`.
+- **"This page only works inside the Noqta admin"**: open it from the admin, not the tunnel link.
