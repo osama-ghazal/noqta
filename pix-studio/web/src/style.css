@@ -1,0 +1,178 @@
+/* Noqta admin look: same font and black-and-white palette as the store admin, so your app feels
+   like part of it. Change the variables below, not every rule. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+:root {
+  --nq-font: 'IBM Plex Sans Arabic', 'IBM Plex Sans Hebrew', system-ui, sans-serif;
+  --nq-primary: #000;
+  --nq-on-primary: #fff;
+  --nq-text: #2f2b3d;
+  --nq-muted: rgba(47, 43, 61, 0.68);
+  --nq-border: rgba(47, 43, 61, 0.16);
+  --nq-surface: #fff;
+  --nq-subtle: #f5f5f5;
+  --nq-hover: rgba(0, 0, 0, 0.04);
+  --nq-error: #ea5455;
+  --nq-success: #28c76f;
+  --nq-radius: 15px; /* cards, tables */
+  --nq-radius-field: 10px; /* inputs */
+
+  font-family: var(--nq-font);
+  font-size: 14px;
+  color: var(--nq-text);
+  background: var(--nq-surface);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+}
+.app {
+  padding: 16px;
+}
+.muted {
+  color: var(--nq-muted);
+  font-size: 13px;
+  margin: 0;
+}
+.notice {
+  padding: 32px 16px;
+  text-align: center;
+}
+.error {
+  color: var(--nq-error);
+}
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── form controls ── */
+select,
+input,
+textarea,
+button {
+  font: inherit;
+  font-size: 14px;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: var(--nq-radius-field);
+  border: 1px solid var(--nq-border);
+  background: var(--nq-surface);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--nq-primary);
+}
+button {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  min-height: 36px;
+  padding: 6px 16px;
+  border-radius: 999px; /* pill buttons, like the admin */
+}
+button:hover:not(:disabled) {
+  background: var(--nq-hover);
+}
+button.primary {
+  background: var(--nq-primary);
+  border-color: var(--nq-primary);
+  color: var(--nq-on-primary);
+}
+button.primary:hover:not(:disabled) {
+  background: #222;
+}
+button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+/* ── cards and grids ── */
+.grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.card {
+  border: 1px solid var(--nq-border);
+  border-radius: var(--nq-radius);
+  padding: 8px;
+}
+.thumbs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  min-height: 80px;
+  align-items: center;
+}
+.thumbs img {
+  width: 100%;
+  max-width: 160px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--nq-subtle);
+}
+.title {
+  font-size: 13px;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── tables ── */
+.history {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 13px;
+  border: 1px solid var(--nq-border);
+  border-radius: var(--nq-radius);
+}
+.history th {
+  background: var(--nq-subtle);
+  font-weight: 600;
+}
+.history th,
+.history td {
+  text-align: start;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--nq-border);
+}
+.history tbody tr:hover {
+  background: var(--nq-hover);
+}
+.history a {
+  color: var(--nq-primary);
+  font-weight: 500;
+}
+.history tbody tr:last-child td {
+  border-bottom: 0;
+}

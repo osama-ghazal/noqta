@@ -1,0 +1,59 @@
+{%- comment -%}
+  An app block: the merchant adds it to a page in the builder ("Newsletter · <your app>").
+  Rendered by Noqta Studio like a theme section — Liquid, CSS and a little JS, no server of yours.
+  The form saves a "subscriber" metaobject at Noqta (see noqta.app.toml: access.storefront_form).
+{%- endcomment -%}
+{%- assign form = app.forms.subscriber -%}
+<div class="nq-app-newsletter" data-ok="{{ section.settings.success | escape }}">
+  <h3 class="nq-app-newsletter__title">{{ section.settings.title | escape }}</h3>
+  {%- if section.settings.text != blank -%}<p class="nq-app-newsletter__text">{{ section.settings.text | escape }}</p>{%- endif -%}
+  {%- if form -%}
+    <form class="nq-app-newsletter__form" method="post" action="{{ form.url | escape }}">
+      <input type="email" name="fields[email]" required placeholder="{{ section.settings.placeholder | escape }}" autocomplete="email">
+      {%- comment -%} Bots fill every field; people never see this one. {%- endcomment -%}
+      <input type="text" name="{{ form.honeypot | escape }}" tabindex="-1" autocomplete="off" aria-hidden="true" class="nq-app-newsletter__hp">
+      <button type="submit">{{ section.settings.button | escape }}</button>
+    </form>
+    <p class="nq-app-newsletter__msg" role="status" hidden></p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+.nq-app-newsletter { max-width: 560px; margin: 32px auto; padding: 24px; text-align: center; border-radius: 16px; background: #f5f3ff; }
+.nq-app-newsletter__title { margin: 0 0 8px; font-size: 1.4rem; }
+.nq-app-newsletter__text { margin: 0 0 16px; color: #555; }
+.nq-app-newsletter__form { display: flex; gap: 8px; }
+.nq-app-newsletter__form input[type=email] { flex: 1; padding: 10px 12px; border: 1px solid #ddd; border-radius: 10px; }
+.nq-app-newsletter__form button { padding: 10px 18px; border: 0; border-radius: 10px; background: #000; color: #fff; cursor: pointer; }
+.nq-app-newsletter__hp { position: absolute; left: -9999px; }
+.nq-app-newsletter__msg { margin: 12px 0 0; }
+{% endstylesheet %}
+
+{% javascript %}
+// Submit without leaving the page (the form also works without JavaScript).
+document.querySelectorAll('.nq-app-newsletter__form').forEach((form) => {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const box = form.closest('.nq-app-newsletter')
+    const msg = box.querySelector('.nq-app-newsletter__msg')
+    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+    const body = await res.json().catch(() => ({}))
+    msg.hidden = false
+    msg.textContent = res.ok ? box.dataset.ok : body.errors || 'Error'
+    if (res.ok) form.reset()
+  })
+})
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "النشرة البريدية",
+  "settings": [
+    { "type": "text", "id": "title", "label": "العنوان", "default": "اشترك في نشرتنا" },
+    { "type": "textarea", "id": "text", "label": "النص", "default": "خصومات وأخبار المتجر أولاً بأول." },
+    { "type": "text", "id": "placeholder", "label": "النص داخل الحقل", "default": "بريدك الإلكتروني" },
+    { "type": "text", "id": "button", "label": "نص الزر", "default": "اشترك" },
+    { "type": "text", "id": "success", "label": "رسالة النجاح", "default": "شكراً لاشتراكك!" }
+  ]
+}
+{% endschema %}

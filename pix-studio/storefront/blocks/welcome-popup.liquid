@@ -1,0 +1,39 @@
+{%- comment -%}
+  An app embed ("target": "body"): a general dialog on every page of the store (never on cart,
+  checkout or account pages), once the merchant switches it on. Shoppers see it once.
+{%- endcomment -%}
+<dialog class="nq-welcome" data-delay="{{ section.settings.delay | escape }}">
+  <h3>{{ section.settings.title | escape }}</h3>
+  {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+  <form method="dialog"><button>{{ section.settings.button | escape }}</button></form>
+</dialog>
+
+{% stylesheet %}
+.nq-welcome { border: 0; border-radius: 16px; padding: 24px; max-width: 360px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.2); }
+.nq-welcome::backdrop { background: rgba(0,0,0,.35); }
+.nq-welcome h3 { margin: 0 0 8px; }
+.nq-welcome button { margin-top: 12px; padding: 8px 20px; border: 0; border-radius: 10px; background: #000; color: #fff; cursor: pointer; }
+{% endstylesheet %}
+
+{% javascript %}
+const dialog = document.querySelector('.nq-welcome')
+if (dialog && !localStorage.getItem('nq-welcome-seen')) {
+  setTimeout(() => {
+    dialog.showModal()
+    localStorage.setItem('nq-welcome-seen', '1')
+  }, Number(dialog.dataset.delay || 0) * 1000)
+}
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "نافذة ترحيب",
+  "target": "body",
+  "settings": [
+    { "type": "text", "id": "title", "label": "العنوان", "default": "أهلاً بك!" },
+    { "type": "textarea", "id": "text", "label": "النص", "default": "اكتشف منتجاتنا الجديدة." },
+    { "type": "text", "id": "button", "label": "نص الزر", "default": "تسوّق الآن" },
+    { "type": "number", "id": "delay", "label": "الظهور بعد (ثوانٍ)", "default": 2 }
+  ]
+}
+{% endschema %}

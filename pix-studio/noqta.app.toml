@@ -1,0 +1,76 @@
+# Your app's config — same format and keys as Shopify's shopify.app.toml.
+# `nqs app init` fills in client_id and handle; `nqs app deploy` uploads this file as a new
+# app version. Asking for a new scope waits for Noqta's approval; everything else is live at once.
+
+client_id = "app_ybc50u18bf0f5bdk"
+# What merchants see (side menu, dialogs, App data): a real name, not a slug.
+name = "Pix Studio"
+handle = "pix-studio"
+application_url = "https://your-app.example.com"
+embedded = true
+api_version = "v1"
+
+[access_scopes]
+scopes = "read_products,write_products,read_metaobjects,write_metaobjects"
+
+[build]
+# Your dev store (set by Noqta). `nqs app dev` points it at http://localhost:3000.
+dev_store_url = ""
+
+# Where the app appears in the admin. Each action opens application_url + path in a dialog.
+[[admin.actions]]
+target = "admin.product-details.action.render"
+title = { ar = "تحسين الصور", en = "Enhance images" }
+path = "/actions/product"
+
+[[admin.actions]]
+target = "admin.product-index.selection-action.render"
+title = { ar = "تحسين الصور", en = "Enhance images" }
+path = "/actions/products"
+
+# App proxy (like Shopify's): blocks call your server on the store's own domain, signed.
+# {{ app.proxy_url }}/status → https://<store>/apps/<subpath>/status → <url>/status (see
+# server/index.ts: requireAppProxy). Live with `nqs app deploy`, like Shopify.
+# [app_proxy]
+# url = "https://your-app.example.com/proxy"
+# subpath = "ai-images"
+# prefix = "apps"
+
+# App data stored at Noqta (like Shopify's app-owned metaobjects). One entry per RUN (not per
+# product: a product's own data goes on the product as a metafield, see server/jobs.ts).
+# The merchant sees them under the app → "App data" (read-only: merchant_read).
+[metaobjects.app.regeneration]
+name = "عمليات تحسين الصور"
+access.admin = "merchant_read"
+access.storefront = "none"
+
+[metaobjects.app.regeneration.fields.products]
+name = "عدد المنتجات"
+type = "number_integer"
+required = true
+
+[metaobjects.app.regeneration.fields.images]
+name = "عدد الصور"
+type = "number_integer"
+
+[metaobjects.app.regeneration.fields.mode]
+name = "النوع"
+type = "single_line_text_field"
+
+[metaobjects.app.regeneration.fields.product_titles]
+name = "المنتجات"
+type = "multi_line_text_field"
+
+# Shoppers' newsletter signups, from the "newsletter" app block (storefront/blocks/newsletter.liquid).
+# access.storefront_form = true lets the block's form add entries; the merchant sees them under
+# your app → "App data", your server reads them with read_metaobjects.
+[metaobjects.app.subscriber]
+name = "المشتركون"
+access.admin = "merchant_read"
+access.storefront = "none"
+access.storefront_form = true
+
+[metaobjects.app.subscriber.fields.email]
+name = "البريد الإلكتروني"
+type = "single_line_text_field"
+required = true
